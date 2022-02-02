@@ -4,7 +4,6 @@
 
 @model Mission04.Models.FormResponse
 
-@* This page references the models for the form. Each input in the model is specified for certain datatypes. Rating is dropdown. Edited is boolean. Notes has a maxlength of 25. *@
 <h1>Enter a Movie:</h1>
 
 
@@ -36,13 +35,12 @@
             <option value="false">No</option>
         </select><br />
 
-         <label asp-for="LentTo">Lent To:</label>
-         <input asp-for="LentTo" /><br />
+        <label asp-for="LentTo">Lent To:</label>
+        <input asp-for="LentTo" /><br />
 
-         <label asp-for="Notes">Notes</label>
-         <input asp-for="Notes" maxlength="25"/><br />
-        
+        <label asp-for="Notes">Notes</label>
+        <input asp-for="Notes" maxlength="25" /><br />
+
         <button type="submit">Submit Movie</button>
-</form>
+    </form>
 </div>
-
