@@ -11,15 +11,21 @@ namespace Mission04.Models
         [Key]
         [Required]
         public int MovieId { get; set; }
+
+
+        //Build foregin key Relationship
         [Required]
-        public string Category { get; set; }
-        [Required]
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
+
+
+        [Required(ErrorMessage ="You need to enter a valid Title!")]
         public string Title { get; set; }
-        [Required]
+        [Required(ErrorMessage = "You need to enter a valid Year!")]
         public ushort Year { get; set; }
-        [Required]
+        [Required(ErrorMessage = "You need to enter a valid Director!")]
         public string Director { get; set; }
-        [Required]
+        [Required(ErrorMessage = "You need to enter a valid Rating!")]
         public string Rating { get; set; }
         public bool Edited { get; set; }
         public string LentTo { get; set; }

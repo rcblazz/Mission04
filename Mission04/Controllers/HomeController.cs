@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Mission04.Models;
 using System;
@@ -12,13 +13,12 @@ namespace Mission04.Controllers
     public class HomeController : Controller
     {
         
-        private readonly ILogger<HomeController> _logger;
+
         private MovieFormContext blahContext { get; set; }
 
         //Constructor
-        public HomeController(ILogger<HomeController> logger, MovieFormContext someName)
+        public HomeController(MovieFormContext someName)
         {
-            _logger = logger;
             blahContext = someName;
         }
 
@@ -36,6 +36,8 @@ namespace Mission04.Controllers
         [HttpGet]
         public IActionResult MovieForm ()
         {
+            ViewBag.Categories = blahContext.Categories.ToList();
+
             return View();
         }
 
@@ -43,20 +45,64 @@ namespace Mission04.Controllers
         [HttpPost]
         public IActionResult MovieForm(FormResponse fr)
         {
-            blahContext.Add(fr);
+            if (ModelState.IsValid)
+            {
+                blahContext.Add(fr);
+                blahContext.SaveChanges();
+
+                return View("FormConfirmation", fr);
+            }
+            else //If Invalid
+            {
+                ViewBag.Categories = blahContext.Categories.ToList();
+
+                return View(fr);
+            }
+        }
+
+        public IActionResult MovieList ()
+        {
+            var movies = blahContext.responses
+                .Include(x => x.Category)
+                .ToList();
+
+            return View (movies);
+        }
+
+        [HttpGet]
+        public IActionResult Edit (int movieid)
+        {
+            ViewBag.Categories = blahContext.Categories.ToList();
+
+            var form = blahContext.responses.Single(x => x.MovieId == movieid);
+
+            return View("MovieForm", form);
+        }
+
+        [HttpPost]
+        public IActionResult Edit (FormResponse blah)
+        {
+            blahContext.Update(blah);
             blahContext.SaveChanges();
-            return View("FormConfirmation", fr);
+
+            return RedirectToAction("MovieList");
         }
 
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult Delete (int movieid)
         {
-            return View();
+            var form = blahContext.responses.Single(x => x.MovieId == movieid);
+
+            return View(form);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPost]
+        public IActionResult Delete (FormResponse fr)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            blahContext.responses.Remove(fr);
+            blahContext.SaveChanges();
+
+            return RedirectToAction("MovieList");
         }
     }
 }

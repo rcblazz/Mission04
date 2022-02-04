@@ -15,6 +15,62 @@ namespace Mission04.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.22");
 
+            modelBuilder.Entity("Mission04.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "Action/Adventure"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Comedy"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryName = "Drama"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryName = "Family"
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            CategoryName = "Horror/Suspense"
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            CategoryName = "Miscellaneous"
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            CategoryName = "Television"
+                        },
+                        new
+                        {
+                            CategoryId = 8,
+                            CategoryName = "VHS"
+                        });
+                });
+
             modelBuilder.Entity("Mission04.Models.FormResponse", b =>
                 {
                     b.Property<int>("MovieId")
@@ -24,9 +80,8 @@ namespace Mission04.Migrations
                     b.Property<int>("ApplicationId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Director")
                         .IsRequired()
@@ -54,6 +109,8 @@ namespace Mission04.Migrations
 
                     b.HasKey("MovieId");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("responses");
 
                     b.HasData(
@@ -61,7 +118,7 @@ namespace Mission04.Migrations
                         {
                             MovieId = 1,
                             ApplicationId = 0,
-                            Category = "Drama",
+                            CategoryId = 3,
                             Director = "J.A. Bayona",
                             Edited = false,
                             LentTo = "",
@@ -74,7 +131,7 @@ namespace Mission04.Migrations
                         {
                             MovieId = 2,
                             ApplicationId = 0,
-                            Category = "Historical Drama",
+                            CategoryId = 3,
                             Director = "Lee Daniels",
                             Edited = false,
                             LentTo = "",
@@ -87,7 +144,7 @@ namespace Mission04.Migrations
                         {
                             MovieId = 3,
                             ApplicationId = 0,
-                            Category = "Drama",
+                            CategoryId = 3,
                             Director = "Tate Taylor",
                             Edited = false,
                             LentTo = "",
@@ -96,6 +153,15 @@ namespace Mission04.Migrations
                             Title = "The Help",
                             Year = (ushort)2011
                         });
+                });
+
+            modelBuilder.Entity("Mission04.Models.FormResponse", b =>
+                {
+                    b.HasOne("Mission04.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
